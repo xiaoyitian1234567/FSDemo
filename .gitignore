@@ -1,0 +1,29 @@
+.git/
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Backend
+backend/target/
+backend/.idea/
+
+# Finance service
+finance-service/node_modules/
+finance-service/logs/
+finance-service/uploads/
+finance-service/.idea/
+
+# Env and secrets
+.env
+.env.*
+*.local
+
+# Vercel local metadata
+.vercel/

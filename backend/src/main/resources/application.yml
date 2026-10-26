@@ -1,0 +1,50 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/feishu_integration?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: localhost
+    port: 6379
+    password: 
+    timeout: 2000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 2
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.feishu.integration.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+feishu:
+  app-id: your_feishu_app_id
+  app-secret: your_feishu_app_secret
+  api-base-url: https://open.feishu.cn
+  event-verify-token: your_event_verify_token
+  encrypt-key: your_encrypt_key
+
+logging:
+  level:
+    root: INFO
+    com.feishu.integration: DEBUG
+    org.springframework.web: INFO
+    org.mybatis: INFO
+
+# 多语言配置
+spring:
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+    cache-duration: 3600s
