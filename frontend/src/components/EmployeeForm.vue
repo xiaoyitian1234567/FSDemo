@@ -1,295 +1,266 @@
 <template>
-  <div class="employee-form">
-    <el-card class="form-card">
-      <div slot="header" class="card-header">
-        <h2>{{ isEditMode ? '编辑员工' : '新增员工' }}</h2>
-        <el-button @click="goBack">返回</el-button>
-      </div>
+  <div class="employee-form-page">
+    <el-card class="form-card" shadow="never">
+      <template #header>
+        <div class="card-header">
+          <div>
+            <h2>{{ isEditMode ? '编辑员工' : '新增员工' }}</h2>
+            <p>保存后会直接写入本地演示数据，可立即回到列表查看效果。</p>
+          </div>
+          <el-button @click="router.push('/employees')">返回列表</el-button>
+        </div>
+      </template>
 
-      <el-form
-        ref="employeeForm"
-        :model="formData"
-        :rules="formRules"
-        label-width="120px"
-        class="form-container"
-      >
-        <el-row :gutter="20">
-          <el-col :span="12">
+      <el-form ref="employeeForm" :model="formData" :rules="formRules" label-width="100px">
+        <el-row :gutter="16">
+          <el-col :md="12" :xs="24">
             <el-form-item label="姓名" prop="name">
-              <el-input v-model="formData.name" placeholder="请输入员工姓名"/>
+              <el-input v-model="formData.name" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="工号" prop="employeeId" v-if="!isEditMode">
-              <el-input v-model="formData.employeeId" placeholder="请输入工号"/>
-            </el-form-item>
-            <el-form-item label="工号" v-else>
-              <el-input v-model="formData.employeeId" disabled/>
-              <el-form-item__error>工号不可修改</el-form-item__error>
+          <el-col :md="12" :xs="24">
+            <el-form-item label="工号" prop="employeeId">
+              <el-input v-model="formData.employeeId" :disabled="isEditMode" />
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row :gutter="16">
+          <el-col :md="12" :xs="24">
             <el-form-item label="部门" prop="departmentId">
               <el-select v-model="formData.departmentId" placeholder="请选择部门">
                 <el-option
-                  v-for="dept in departments"
+                  v-for="dept in departments.filter((item) => item.id !== 'all')"
                   :key="dept.id"
                   :label="dept.name"
                   :value="dept.id"
-                ></el-option>
+                />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :md="12" :xs="24">
             <el-form-item label="职位" prop="position">
-              <el-input v-model="formData.position" placeholder="请输入职位"/>
+              <el-input v-model="formData.position" />
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row :gutter="16">
+          <el-col :md="12" :xs="24">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="formData.email" type="email" placeholder="请输入邮箱"/>
+              <el-input v-model="formData.email" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="电话" prop="phone">
-              <el-input v-model="formData.phone" placeholder="请输入电话号码"/>
+          <el-col :md="12" :xs="24">
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="formData.phone" />
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row :gutter="16">
+          <el-col :md="12" :xs="24">
+            <el-form-item label="办公地" prop="location">
+              <el-input v-model="formData.location" />
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" :xs="24">
+            <el-form-item label="直属上级" prop="supervisor">
+              <el-input v-model="formData.supervisor" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="16">
+          <el-col :md="12" :xs="24">
             <el-form-item label="入职日期" prop="hireDate">
               <el-date-picker
                 v-model="formData.hireDate"
                 type="date"
-                placeholder="选择入职日期"
-                format="YYYY-MM-DD"
                 value-format="YYYY-MM-DD"
+                format="YYYY-MM-DD"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :md="12" :xs="24">
             <el-form-item label="员工状态" prop="status">
-              <el-select v-model="formData.status" placeholder="请选择员工状态">
-                <el-option label="在职" value="在职"></el-option>
-                <el-option label="离职" value="离职"></el-option>
-                <el-option label="休假" value="休假"></el-option>
-                <el-option label="试用期" value="试用期"></el-option>
+              <el-select v-model="formData.status">
+                <el-option label="在职" value="在职" />
+                <el-option label="试用期" value="试用期" />
+                <el-option label="休假" value="休假" />
+                <el-option label="离职" value="离职" />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="合同开始日期" prop="contractStart">
+        <el-row :gutter="16">
+          <el-col :md="12" :xs="24">
+            <el-form-item label="合同开始" prop="contractStart">
               <el-date-picker
                 v-model="formData.contractStart"
                 type="date"
-                placeholder="选择合同开始日期"
-                format="YYYY-MM-DD"
                 value-format="YYYY-MM-DD"
+                format="YYYY-MM-DD"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="合同结束日期" prop="contractEnd">
+          <el-col :md="12" :xs="24">
+            <el-form-item label="合同结束" prop="contractEnd">
               <el-date-picker
                 v-model="formData.contractEnd"
                 type="date"
-                placeholder="选择合同结束日期"
-                format="YYYY-MM-DD"
                 value-format="YYYY-MM-DD"
+                format="YYYY-MM-DD"
               />
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="薪资" prop="salary">
-              <el-input
-                v-model.number="formData.salary"
-                type="number"
-                placeholder="请输入薪资"
-              />
+        <el-row :gutter="16">
+          <el-col :md="12" :xs="24">
+            <el-form-item label="月薪" prop="salary">
+              <el-input-number v-model="formData.salary" :min="3000" :step="500" controls-position="right" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="直属上级" prop="supervisor">
-              <el-input v-model="formData.supervisor" placeholder="请输入直属上级姓名"/>
+          <el-col :md="12" :xs="24">
+            <el-form-item label="绩效评级" prop="performance">
+              <el-select v-model="formData.performance">
+                <el-option label="A" value="A" />
+                <el-option label="A-" value="A-" />
+                <el-option label="B+" value="B+" />
+                <el-option label="B" value="B" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-form-item class="form-actions">
+        <div class="form-actions">
           <el-button @click="resetForm">重置</el-button>
-          <el-button type="primary" @click="submitForm">提交</el-button>
-        </el-form-item>
+          <el-button type="primary" @click="submitForm">{{ isEditMode ? '保存修改' : '创建员工' }}</el-button>
+        </div>
       </el-form>
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import axios from 'axios';
+import { ElMessage } from 'element-plus';
+import { getDepartments, getEmployeeById, saveEmployee } from '../mock/employeeStore';
 
 const route = useRoute();
 const router = useRouter();
-const employeeForm = ref(null);
-const isEditMode = ref(!!route.params.id);
-const departments = ref([]);
+const employeeForm = ref();
+const isEditMode = Boolean(route.params.id);
+const departments = getDepartments();
+
+const existingEmployee = isEditMode ? getEmployeeById(route.params.id) : null;
 
 const formData = reactive({
-  name: '',
-  employeeId: '',
-  departmentId: '',
-  position: '',
-  email: '',
-  phone: '',
-  hireDate: '',
-  status: '在职',
-  contractStart: '',
-  contractEnd: '',
-  salary: null,
-  supervisor: ''
+  name: existingEmployee?.name || '',
+  employeeId: existingEmployee?.employeeId || generateEmployeeId(),
+  departmentId: existingEmployee?.departmentId || 'tech',
+  position: existingEmployee?.position || '',
+  email: existingEmployee?.email || '',
+  phone: existingEmployee?.phone || '',
+  hireDate: existingEmployee?.hireDate || '',
+  status: existingEmployee?.status || '在职',
+  contractStart: existingEmployee?.contractStart || '',
+  contractEnd: existingEmployee?.contractEnd || '',
+  salary: existingEmployee?.salary || 10000,
+  supervisor: existingEmployee?.supervisor || '',
+  location: existingEmployee?.location || '',
+  performance: existingEmployee?.performance || 'B+'
 });
 
-const formRules = reactive({
-  name: [{ required: true, message: '请输入员工姓名', trigger: 'blur' }],
-  employeeId: [
-    { required: true, message: '请输入工号', trigger: 'blur' },
-    { min: 4, max: 10, message: '工号长度在 4 到 10 个字符', trigger: 'blur' }
-  ],
+const formRules = {
+  name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+  employeeId: [{ required: true, message: '请输入工号', trigger: 'blur' }],
   departmentId: [{ required: true, message: '请选择部门', trigger: 'change' }],
   position: [{ required: true, message: '请输入职位', trigger: 'blur' }],
-  email: [
-    { required: true, message: '请输入邮箱', trigger: 'blur' },
-    { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
-  ],
-  phone: [
-    { required: true, message: '请输入电话号码', trigger: 'blur' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
-  ],
+  email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+  phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
   hireDate: [{ required: true, message: '请选择入职日期', trigger: 'change' }],
-  status: [{ required: true, message: '请选择员工状态', trigger: 'change' }],
   contractStart: [{ required: true, message: '请选择合同开始日期', trigger: 'change' }],
-  contractEnd: [{ required: true, message: '请选择合同结束日期', trigger: 'change' }],
-  salary: [
-    { required: true, message: '请输入薪资', trigger: 'blur' },
-    { type: 'number', message: '请输入有效的数字', trigger: 'blur' },
-    { min: 3000, message: '薪资不能低于3000', trigger: 'blur' }
-  ]
-});
-
-onMounted(() => {
-  fetchDepartments();
-  if (isEditMode.value) {
-    fetchEmployeeDetail();
-  } else {
-    generateEmployeeId();
-  }
-});
-
-// 获取部门列表
-const fetchDepartments = async () => {
-  try {
-    const response = await axios.get('/api/departments');
-    departments.value = response.data.data;
-  } catch (error) {
-    ElMessage.error('获取部门列表失败: ' + (error.response?.data?.message || error.message));
-  }
+  contractEnd: [{ required: true, message: '请选择合同结束日期', trigger: 'change' }]
 };
 
-// 获取员工详情（编辑模式）
-const fetchEmployeeDetail = async () => {
-  try {
-    const response = await axios.get(`/api/employees/${route.params.id}`);
-    const employeeData = response.data.data;
-    // 填充表单数据
-    for (const key in formData) {
-      if (employeeData.hasOwnProperty(key)) {
-        formData[key] = employeeData[key];
-      }
-    }
-  } catch (error) {
-    ElMessage.error('获取员工详情失败: ' + (error.response?.data?.message || error.message));
-    router.push('/employees');
-  }
-};
+function generateEmployeeId() {
+  const random = Math.floor(Math.random() * 900 + 100);
+  return `EMP26${random}`;
+}
 
-// 生成默认工号（新增模式）
-const generateEmployeeId = () => {
-  const prefix = 'EMP';
-  const date = new Date().getFullYear().toString().slice(-2);
-  const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-  formData.employeeId = `${prefix}${date}${random}`;
-};
-
-// 提交表单
-const submitForm = async () => {
+async function submitForm() {
   await employeeForm.value.validate();
+  saveEmployee({ ...formData }, route.params.id);
+  ElMessage.success(isEditMode ? '员工信息已更新' : '员工已创建');
+  router.push('/employees');
+}
 
-  try {
-    if (isEditMode.value) {
-      // 编辑模式
-      await axios.put(`/api/employees/${route.params.id}`, formData);
-      ElMessage.success('员工信息更新成功');
-    } else {
-      // 新增模式
-      await axios.post('/api/employees', formData);
-      ElMessage.success('员工创建成功');
-    }
-    router.push('/employees');
-  } catch (error) {
-    ElMessage.error('操作失败: ' + (error.response?.data?.message || error.message));
+function resetForm() {
+  if (isEditMode && existingEmployee) {
+    Object.assign(formData, existingEmployee);
+    return;
   }
-};
 
-// 重置表单
-const resetForm = () => {
-  employeeForm.value.resetFields();
-  if (!isEditMode.value) {
-    generateEmployeeId();
-  }
-};
-
-// 返回列表
-const goBack = () => {
-  router.go(-1);
-};
+  Object.assign(formData, {
+    name: '',
+    employeeId: generateEmployeeId(),
+    departmentId: 'tech',
+    position: '',
+    email: '',
+    phone: '',
+    hireDate: '',
+    status: '在职',
+    contractStart: '',
+    contractEnd: '',
+    salary: 10000,
+    supervisor: '',
+    location: '',
+    performance: 'B+'
+  });
+}
 </script>
 
 <style scoped>
+.employee-form-page {
+  padding-bottom: 24px;
+}
+
 .form-card {
-  max-width: 800px;
+  max-width: 920px;
   margin: 0 auto;
+  border-radius: 18px;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-.form-container {
-  padding: 20px 0;
+.card-header h2 {
+  margin: 0 0 8px;
+}
+
+.card-header p {
+  margin: 0;
+  color: #6b7280;
 }
 
 .form-actions {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+  .card-header {
+    flex-direction: column;
+  }
 }
 </style>

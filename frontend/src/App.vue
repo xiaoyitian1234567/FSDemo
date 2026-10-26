@@ -3,73 +3,50 @@
     <el-container class="app-container">
       <el-header class="app-header">
         <div class="logo">
-          <el-icon><OfficeBuilding /></el-icon>
-          <span class="logo-text">员工管理系统</span>
+          <el-icon><Grid /></el-icon>
+          <div>
+            <div class="logo-text">招聘演示后台</div>
+            <div class="logo-subtitle">员工管理前端 Demo</div>
+          </div>
         </div>
         <div class="user-info">
-          <el-dropdown trigger="click">
-            <span class="user-name">
-              <el-icon><UserFilled /></el-icon>
-              管理员
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item><el-icon><Setting /></el-icon>个人设置</el-dropdown-item>
-                <el-dropdown-item><el-icon><QuestionFilled /></el-icon>帮助中心</el-dropdown-item>
-                <el-dropdown-item divided><el-icon><SwitchButton /></el-icon>退出登录</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+          <el-tag type="success" effect="light">本地 Mock 模式</el-tag>
         </div>
       </el-header>
 
       <el-container>
-        <el-aside width="200px" class="app-aside">
+        <el-aside width="220px" class="app-aside">
           <el-menu
-            default-active="1"
+            :default-active="activePath"
+            router
             class="el-menu-vertical-demo"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b"
+            background-color="#0f172a"
+            text-color="#cbd5e1"
+            active-text-color="#ffffff"
           >
-            <el-menu-item index="1" @click="$router.push('/dashboard')">
+            <el-menu-item index="/dashboard">
               <el-icon><House /></el-icon>
               <span>仪表盘</span>
             </el-menu-item>
 
-            <el-submenu index="2">
+            <el-submenu index="employee">
               <template #title>
                 <el-icon><User /></el-icon>
                 <span>员工管理</span>
               </template>
-              <el-menu-item index="2-1" @click="$router.push('/employees')">
+              <el-menu-item index="/employees">
                 <el-icon><UserFilled /></el-icon>
                 员工列表
               </el-menu-item>
-              <el-menu-item index="2-2" @click="$router.push('/employee/create')">
+              <el-menu-item index="/employee/create">
                 <el-icon><Plus /></el-icon>
                 新增员工
               </el-menu-item>
             </el-submenu>
 
-            <el-menu-item index="3">
-              <el-icon><OfficeBuilding /></el-icon>
-              <span>部门管理</span>
-            </el-menu-item>
-
-            <el-menu-item index="4">
-              <el-icon><Document /></el-icon>
-              <span>薪资管理</span>
-            </el-menu-item>
-
-            <el-menu-item index="5">
+            <el-menu-item index="/dashboard">
               <el-icon><PieChart /></el-icon>
-              <span>统计报表</span>
-            </el-menu-item>
-
-            <el-menu-item index="6">
-              <el-icon><Setting /></el-icon>
-              <span>系统设置</span>
+              <span>统计展示</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -82,36 +59,54 @@
   </div>
 </template>
 
+<script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const activePath = computed(() => {
+  if (route.path.startsWith('/employee/')) {
+    return route.path.includes('/create') ? '/employee/create' : '/employees';
+  }
+  return route.path;
+});
+</script>
+
 <style scoped>
 .app-container {
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .app-header {
   background-color: #fff;
-  padding: 0 20px;
-  border-bottom: 1px solid #e8e8e8;
+  padding: 0 24px;
+  border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 72px;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  height: 60px;
+  gap: 12px;
 }
 
 .logo .el-icon {
   font-size: 24px;
-  color: #409eff;
-  margin-right: 10px;
+  color: #2563eb;
 }
 
 .logo-text {
   font-size: 18px;
-  font-weight: bold;
-  color: #303133;
+  font-weight: 700;
+  color: #111827;
+}
+
+.logo-subtitle {
+  font-size: 12px;
+  color: #6b7280;
 }
 
 .user-info {
@@ -119,29 +114,28 @@
   align-items: center;
 }
 
-.user-name {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: #303133;
-}
-
-.user-name .el-icon {
-  font-size: 20px;
-  margin-right: 5px;
-}
-
 .app-aside {
-  background-color: #545c64;
+  background-color: #0f172a;
 }
 
 .app-main {
-  padding: 20px;
-  background-color: #f5f7fa;
+  padding: 24px;
+  background-color: #f3f6fb;
 }
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
-  min-height: 400px;
+  width: 220px;
+  min-height: calc(100vh - 72px);
+  border-right: none;
+}
+
+@media (max-width: 900px) {
+  .app-aside {
+    display: none;
+  }
+
+  .app-main {
+    padding: 16px;
+  }
 }
 </style>
