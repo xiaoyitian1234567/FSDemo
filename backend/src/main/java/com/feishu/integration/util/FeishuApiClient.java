@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 飞书API客户端工具类（不依赖SDK，直接HTTP调用）
  * 实现访问令牌管理和API请求封装
  */
-@Component
+@Component("restFeishuApiClient")
 public class FeishuApiClient {
     // 注入配置参数
     @Value("${feishu.app.id}")

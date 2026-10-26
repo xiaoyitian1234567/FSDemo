@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * 飞书API客户端（OkHttp实现）
  * 替代官方SDK，使用OkHttp直接调用飞书API接口
  */
-@Component
+@Component("okHttpFeishuApiClient")
 public class FeishuApiClient {
     private final OkHttpClient httpClient;
     private final String appId;

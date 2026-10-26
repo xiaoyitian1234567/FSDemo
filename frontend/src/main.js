@@ -34,4 +34,12 @@ axios.interceptors.response.use(
   }
 )
 
-createApp(App).mount('#app')
+const app = createApp(App)
+
+Object.entries(ElementPlusIconsVue).forEach(([key, component]) => {
+  app.component(key, component)
+})
+
+app.use(router)
+app.use(ElementPlus)
+app.mount('#app')

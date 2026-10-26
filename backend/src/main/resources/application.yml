@@ -19,6 +19,11 @@ spring:
         max-active: 8
         max-idle: 8
         min-idle: 2
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+    cache-duration: 3600s
 
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
@@ -40,11 +45,3 @@ logging:
     com.feishu.integration: DEBUG
     org.springframework.web: INFO
     org.mybatis: INFO
-
-# 多语言配置
-spring:
-  messages:
-    basename: i18n/messages
-    encoding: UTF-8
-    fallback-to-system-locale: false
-    cache-duration: 3600s

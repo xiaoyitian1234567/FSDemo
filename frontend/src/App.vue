@@ -3,19 +3,22 @@
     <el-container class="app-container">
       <el-header class="app-header">
         <div class="logo">
-          <i class="el-icon-company"></i>
+          <el-icon><OfficeBuilding /></el-icon>
           <span class="logo-text">员工管理系统</span>
         </div>
         <div class="user-info">
           <el-dropdown trigger="click">
             <span class="user-name">
-              <i class="el-icon-user-circle"></i> 管理员
+              <el-icon><UserFilled /></el-icon>
+              管理员
             </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><i class="el-icon-setting"></i> 个人设置</el-dropdown-item>
-              <el-dropdown-item><i class="el-icon-help"></i> 帮助中心</el-dropdown-item>
-              <el-dropdown-item divided><i class="el-icon-switch-button"></i> 退出登录</el-dropdown-item>
-            </el-dropdown-menu>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item><el-icon><Setting /></el-icon>个人设置</el-dropdown-item>
+                <el-dropdown-item><el-icon><QuestionFilled /></el-icon>帮助中心</el-dropdown-item>
+                <el-dropdown-item divided><el-icon><SwitchButton /></el-icon>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
           </el-dropdown>
         </div>
       </el-header>
@@ -30,41 +33,43 @@
             active-text-color="#ffd04b"
           >
             <el-menu-item index="1" @click="$router.push('/dashboard')">
-              <i class="el-icon-s-home"></i>
-              <span slot="title">仪表盘</span>
+              <el-icon><House /></el-icon>
+              <span>仪表盘</span>
             </el-menu-item>
 
             <el-submenu index="2">
-              <template slot="title">
-                <i class="el-icon-user"></i>
+              <template #title>
+                <el-icon><User /></el-icon>
                 <span>员工管理</span>
               </template>
               <el-menu-item index="2-1" @click="$router.push('/employees')">
-                <i class="el-icon-user-solid"></i> 员工列表
+                <el-icon><UserFilled /></el-icon>
+                员工列表
               </el-menu-item>
               <el-menu-item index="2-2" @click="$router.push('/employee/create')">
-                <i class="el-icon-user-plus"></i> 新增员工
+                <el-icon><Plus /></el-icon>
+                新增员工
               </el-menu-item>
             </el-submenu>
 
             <el-menu-item index="3">
-              <i class="el-icon-building"></i>
-              <span slot="title">部门管理</span>
+              <el-icon><OfficeBuilding /></el-icon>
+              <span>部门管理</span>
             </el-menu-item>
 
             <el-menu-item index="4">
-              <i class="el-icon-document"></i>
-              <span slot="title">薪资管理</span>
+              <el-icon><Document /></el-icon>
+              <span>薪资管理</span>
             </el-menu-item>
 
             <el-menu-item index="5">
-              <i class="el-icon-pie-chart"></i>
-              <span slot="title">统计报表</span>
+              <el-icon><PieChart /></el-icon>
+              <span>统计报表</span>
             </el-menu-item>
 
             <el-menu-item index="6">
-              <i class="el-icon-setting"></i>
-              <span slot="title">系统设置</span>
+              <el-icon><Setting /></el-icon>
+              <span>系统设置</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -76,12 +81,6 @@
     </el-container>
   </div>
 </template>
-
-<script setup>
-import { useRoute } from 'vue-router';
-
-const route = useRoute();
-</script>
 
 <style scoped>
 .app-container {
@@ -103,7 +102,7 @@ const route = useRoute();
   height: 60px;
 }
 
-.logo i {
+.logo .el-icon {
   font-size: 24px;
   color: #409eff;
   margin-right: 10px;
@@ -127,7 +126,7 @@ const route = useRoute();
   color: #303133;
 }
 
-.user-name i {
+.user-name .el-icon {
   font-size: 20px;
   margin-right: 5px;
 }
